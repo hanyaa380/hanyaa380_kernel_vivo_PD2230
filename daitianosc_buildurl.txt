@@ -1,0 +1,1 @@
+http://172.16.188.189:8080/jenkins/job/auto_odc_local_build_comnj01056071/1012/

@@ -1,0 +1,101 @@
+&pio{
+
+	spi2_clk_set_cfg:spi2_clk_set{
+		pins_cmd_dat { 
+		pinmux = <PINMUX_GPIO18__FUNC_SPI2_CLK>; 
+		bias-disable; 
+		drive-strength = <3>;//0--2ma   ......3 8mA
+		};
+	};
+	spi2_cs_set_cfg:spi2_cs_set{
+		pins_cmd_dat { 
+		pinmux = <PINMUX_GPIO20__FUNC_GPIO20>; 
+		drive-strength = <3>;
+		bias-disable; 
+		};
+	};
+	spi2_miso_set_cfg:spi2_miso_set{
+		pins_cmd_dat { 
+		pinmux = <PINMUX_GPIO19__FUNC_GPIO19>; 
+		drive-strength = <3>;
+		bias-disable; 
+		};
+	};
+	spi2_mosi_set_cfg:spi2_mosi_set{
+		pins_cmd_dat { 
+		pinmux = <PINMUX_GPIO17__FUNC_SPI2_MO>; 
+		drive-strength = <3>;
+		bias-disable; 
+		};
+	};
+	spi_pins_pd2216f_cfg:spi_pins_pd2216f {
+		pins_cmd_dat {
+			pinmux = <PINMUX_GPIO18__FUNC_SPI2_CLK>,
+					 <PINMUX_GPIO17__FUNC_SPI2_MO>;
+			drive-strength = <3>;
+			bias-disable;
+		};
+	};
+};
+
+&spi2 {
+	#address-cells = <1>;
+	#size-cells = <0>;
+	
+	vts_device@0 {
+		compatible = "vivo,ts-spi";
+		status = "okay";
+		reg=<0>;
+		spi-max-frequency = <4800000>;
+		pinctrl-names ="default";
+		pinctrl-0 = <&spi_pins_pd2216f_cfg>;
+		nt36672 {
+			compatible = "novatek,NVT-ts-spi-v2";
+			status = "ok";
+		
+			vts-type=<0>;
+			vts-ic-number=<82>;
+			spi-max-frequency = <9600000>;	//4800000,9600000,15000000,19200000
+			//pinctrl-names = "spi_clk_active","spi_mosi_active";
+			//pinctrl-0 = <&spi2_clk_set_cfg>;
+			//novatek,reset-gpio = <&pio 10 0x00>;
+			novatek,irq-gpio = <&pio 0 0x02>;
+			sensor-test-key="com.nttouchscreen.mptest:MainActivity:android.intent.action.novatek:0:testResult";
+			lcm-noise-test-key="com.nt36xxxtouchscreen.deltadiff:MainActivity:null:null:null";
+			rawdata-test-key="com.nttouchscreen.getdata:MainActivity:null:null:null";
+			rf-noise-test-key="com.nt36xxxtouchscreen.deltadiff:BspTest:android.intent.action.nvtdeltadiff:0:testResult";
+			
+			/* 672 */
+			//novatek,swrst-n8-addr = <0x01F01A>;
+
+			/* 672A */
+			novatek,swrst-n8-addr = <0x03F0FE>;
+		};
+	};
+};
+
+&touchscreencfg {
+	
+	compatible = "vivo,touchscreen-config";
+	vivo,ts-product-name="PD2216F_EX";
+	status = "okay";
+	
+	tp_module1 { //BOE NT36525B 1211806
+		compatible = "vivo,touch-panel-module";
+		vts-ic-number=<82>;
+		vts-type=<0>;
+		vts-lcmid=<48>;
+		vts-dimention-x=<720>;
+		vts-dimention-y=<1600>;
+		vts-tx-sensors=<18>;
+		vts-rx-sensors=<32>;
+		vts-incell=<1>;
+		vts-need-caliberation=<0>;
+		vts-virtual-proximinity=<0>;
+		vts-long-press=<0>;
+		vts-module-vendor=<0xF0>;
+		vts-no-flash=<1>;
+		vts-gesture=<1>;
+		vts-input-method=<1>;
+	};
+};

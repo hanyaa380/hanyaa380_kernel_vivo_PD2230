@@ -1,0 +1,67 @@
+/* SPDX-License-Identifier: GPL-2.0 */
+/*
+ * Copyright (c) 2019 MediaTek Inc.
+ */
+
+#ifndef __IMGSENSOR_HW_REGULATOR_H__
+#define __IMGSENSOR_HW_REGULATOR_H__
+
+#include <linux/of.h>
+#include <linux/device.h>
+#include <linux/platform_device.h>
+#include <linux/regulator/consumer.h>
+
+#include "imgsensor_hw.h"
+#include "imgsensor_common.h"
+#include "imgsensor.h"
+
+extern struct IMGSENSOR gimgsensor;
+
+enum REGULATOR_VOLTAGE {
+	REGULATOR_VOLTAGE_0    = 0,
+	REGULATOR_VOLTAGE_1000 = 1000000,
+	REGULATOR_VOLTAGE_1050 = 1050000,
+	REGULATOR_VOLTAGE_1100 = 1100000,
+	REGULATOR_VOLTAGE_1150 = 1150000,
+	REGULATOR_VOLTAGE_1200 = 1200000,
+	REGULATOR_VOLTAGE_1210 = 1210000,
+	REGULATOR_VOLTAGE_1220 = 1220000,
+	REGULATOR_VOLTAGE_1500 = 1500000,
+	REGULATOR_VOLTAGE_1800 = 1800000,
+	REGULATOR_VOLTAGE_2500 = 2500000,
+	REGULATOR_VOLTAGE_2800 = 2800000,
+	REGULATOR_VOLTAGE_2900 = 2900000,
+	REGULATOR_VOLTAGE_3200 = 3200000,
+};
+
+enum REGULATOR_TYPE {
+	REGULATOR_TYPE_VCAMA,
+#if (defined(CONFIG_REGULATOR_RT5133) || defined(CONFIG_MTK_CAM_PD2279) || defined(CONFIG_MTK_CAM_PD2282) || defined(CONFIG_MTK_CAM_PD2279F))
+	REGULATOR_TYPE_VCAMA1,
+#endif
+	REGULATOR_TYPE_VCAMAF_DEF,
+	REGULATOR_TYPE_VCAMD,
+#if (defined(CONFIG_MTK_CAM_PD2230) || defined(CONFIG_MTK_CAM_PD2230F) || defined(CONFIG_MTK_CAM_PD2279F))
+	REGULATOR_TYPE_VCAMD1,
+#endif
+	REGULATOR_TYPE_VCAMOISA,
+	REGULATOR_TYPE_VCAMIO,
+	REGULATOR_TYPE_MAX_NUM
+};
+
+struct REGULATOR_CTRL {
+	char *pregulator_type;
+};
+
+struct REGULATOR {
+	struct regulator *pregulator[
+		IMGSENSOR_SENSOR_IDX_MAX_NUM][REGULATOR_TYPE_MAX_NUM];
+	atomic_t          enable_cnt[
+		IMGSENSOR_SENSOR_IDX_MAX_NUM][REGULATOR_TYPE_MAX_NUM];
+};
+
+enum IMGSENSOR_RETURN imgsensor_hw_regulator_open(
+	struct IMGSENSOR_HW_DEVICE **pdevice);
+
+#endif
+

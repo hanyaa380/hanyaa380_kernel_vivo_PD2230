@@ -1,0 +1,6 @@
+# vivo add for gud kernel driver begin
+CONFIG_TEE=y
+CONFIG_TRUSTONIC_TEE_SUPPORT=y
+CONFIG_MTK_TEE_GP_SUPPORT=y
+CONFIG_EXTCON_MTK_USB=n
+# vivo add for gud kernel driver end
